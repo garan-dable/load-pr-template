@@ -1,16 +1,20 @@
 // ==UserScript==
 // @name         Load PR Template
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      25060201
 // @description  PR Template 내용을 가져옵니다.
 // @author       garan-dable
 // @match        https://github.com/teamdable/*/compare/*
-// @updateURL    https://gist.githubusercontent.com/garan-dable/1c620e66133921ca80b3621ff56769fb/raw/load-pr-template.user.js
-// @downloadURL  https://gist.githubusercontent.com/garan-dable/1c620e66133921ca80b3621ff56769fb/raw/load-pr-template.user.js
+// @updateURL    https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/load-pr-template.user.js
+// @downloadURL  https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/load-pr-template.user.js
+// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/templates.js?v=25060201
+// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/main.js?v=25060201
 // @grant        none
 // ==/UserScript==
 
-const heeyoungTemplate = `## 📍 Summary
+// templates.js
+const templates = {
+  heeyoung: `## 📍 Summary
 
 > 어떤 작업을 했는지 요약해주세요.  
 
@@ -39,8 +43,8 @@ const heeyoungTemplate = `## 📍 Summary
 - [ ] 테스트를 작성/수정하기
 - [ ] 모든 테스트를 통과
 - [ ] Assignee를 지정하기
-- [ ] PR 제출 전 최종 검토 진행하기`;
-const minjiTemplate = `## 📍 Summary
+- [ ] PR 제출 전 최종 검토 진행하기`,
+  minji: `## 📍 Summary
 \`\`\`
 - 어떤 작업인지 간단히 요약해주세요. (무엇을, 왜 진행했는지 등)
 - 관련 문서를 링크해주세요. (Jira, Notion, Figma, Slack 등)
@@ -66,8 +70,8 @@ const minjiTemplate = `## 📍 Summary
 - [ ] 모든 테스트를 통과했다.
 - [ ] 기존 기능에 영향(부작용)이 없는지 확인했다.
 - [ ] (선택) 변경사항에 대한 테스트를 작성했다.
-- [ ] PR의 Assignees를 지정했다. - (assign yourself)`;
-const garanTemplate = `## 🔗 Related
+- [ ] PR의 Assignees를 지정했다. - (assign yourself)`,
+  garan: `## 🔗 Related
 - \`필수\` 관련 Jira 링크를 첨부해 주세요.
 - 그 외 참고해야할 링크가 있다면 첨부해 주세요. (Figma, Notion, Slack, 연관 PR 등)
 
@@ -96,8 +100,8 @@ const garanTemplate = `## 🔗 Related
 > 
 > 여러 코멘트 중 \`RC\`가 존재하면 Request Change 상태로 리뷰를 제출해주세요.
 > 
-> 📘 [FE 팀 PR & 리뷰 가이드](https://www.notion.so/dableglobal/Pull-Requests-and-Code-Review-1e05bbc0e5c280a2b4edfa67550de39a)`;
-const taegonTemplate = `## Summary
+> 📘 [FE 팀 PR & 리뷰 가이드](https://www.notion.so/dableglobal/Pull-Requests-and-Code-Review-1e05bbc0e5c280a2b4edfa67550de39a)`,
+  taegon: `## Summary
 
 - 이슈에 대한 요약, 배경, 관련 이슈를 적습니다.
 <!--
@@ -136,8 +140,8 @@ const taegonTemplate = `## Summary
 - [ ] 자신에게 PR을 할당했다.
 - [ ] 변경 사항에 대한 테스트 코드를 작성했다. 또는 추가 테스트 코드가 불필요하다(설정 등).
 - [ ] 모든 테스트(E2E, Unit)를 통과했다.
-- [ ] 다국어/통화 환경에서도 화면 표시에 문제가 없다.`;
-const sungcheolTemplate = `## 📝 Summary
+- [ ] 다국어/통화 환경에서도 화면 표시에 문제가 없다.`,
+  sungcheol: `## 📝 Summary
 <!-- 이 PR에서 무엇을 변경했는지 간단히 설명해주세요 -->
 - 
 
@@ -185,8 +189,8 @@ const sungcheolTemplate = `## 📝 Summary
 - 
 
 ## 📷 Screenshots
-<!-- 리뷰어에게 도움이 된다면, 스크린샷을 포함해 주세요 -->`;
-const eunkyoungTemplate = `
+<!-- 리뷰어에게 도움이 된다면, 스크린샷을 포함해 주세요 -->`,
+  eunkyoung: `
 ✏️ 이 PR이 왜 필요한지, 어떤 문제를 해결하는지 간단히 작성해주세요.
 
 <!-- 예시:
@@ -291,8 +295,10 @@ const eunkyoungTemplate = `
 >
 > \`RC\`가 하나라도 있으면 **Request Changes** 상태로 리뷰 제출해주세요.
 >
-> 📘 [FE 팀 PR & 리뷰 가이드](https://www.notion.so/dableglobal/Pull-Requests-and-Code-Review-1e05bbc0e5c280a2b4edfa67550de39a)`;
+> 📘 [FE 팀 PR & 리뷰 가이드](https://www.notion.so/dableglobal/Pull-Requests-and-Code-Review-1e05bbc0e5c280a2b4edfa67550de39a)`,
+};
 
+// main.js
 (function () {
   const toolbarId = 'load-pr-template';
   const urlPattern = /^\/teamdable\/[^\/]+\/compare\/.*/;
@@ -301,17 +307,27 @@ const eunkyoungTemplate = `
   const run = async () => {
     if (!urlPattern.test(location.pathname)) return;
 
+    const resetButton = (button) => {
+      button.style.color = 'var(--fgColor-default, var(--color-fg-default))';
+      button.style.backgroundColor = 'transparent';
+    };
+
+    const highlightButton = (button, color) => {
+      button.style.color = '#000';
+      button.style.backgroundColor = color;
+    };
+
     const createButton = (container, text, id, template, isCurrent) => {
       const button = document.createElement('button');
       button.id = id;
       button.innerText = text;
       button.style.padding = '4px 8px';
       button.style.fontSize = '12px';
-      button.style.backgroundColor = '#fff';
       button.style.border = 'none';
       button.style.cursor = 'pointer';
       button.style.outline = 'none';
       button.style.position = 'relative';
+      resetButton(button);
 
       if (isCurrent) {
         const badge = document.createElement('span');
@@ -333,12 +349,12 @@ const eunkyoungTemplate = `
       button.addEventListener('mouseover', () => {
         button.style.fontStyle = 'italic';
         button.style.textDecoration = 'underline';
-        button.style.backgroundColor = '#00ffff';
+        highlightButton(button, '#00ffff');
       });
       button.addEventListener('mouseout', () => {
         button.style.fontStyle = 'normal';
         button.style.textDecoration = 'none';
-        button.style.backgroundColor = '#fff';
+        resetButton(button);
       });
 
       button.onclick = () => {
@@ -347,12 +363,12 @@ const eunkyoungTemplate = `
           if (!textarea) throw new Error('textarea not found');
           textarea.value = template.trim();
           textarea.dispatchEvent(new Event('input', { bubbles: true })); // GitHub는 textarea에 입력되었는지 감지하기 위해 input 이벤트 필요
-          button.style.backgroundColor = '#ffff00';
-          setTimeout(() => (button.style.backgroundColor = '#fff'), 500);
+          highlightButton(button, '#ffff00');
+          setTimeout(() => resetButton(button), 200);
           console.log('[LPT🍀]', 'template loaded');
         } catch (error) {
-          button.style.backgroundColor = '#ff00ff';
-          setTimeout(() => (button.style.backgroundColor = '#fff'), 500);
+          highlightButton(button, '#ff00ff');
+          setTimeout(() => resetButton(button), 200);
           console.warn('[LPT🍀]', error);
         }
       };
@@ -370,20 +386,22 @@ const eunkyoungTemplate = `
     container.style.display = 'flex';
     container.style.gap = '13px';
     container.style.padding = '0 15px';
-    container.style.backgroundColor = '#fff';
-    container.style.border = '1px solid #000';
+    container.style.backgroundColor =
+      'var(--bgColor-default, var(--color-canvas-default))';
+    container.style.border =
+      '1px solid var(--fgColor-default, var(--color-fg-default))';
     container.style.borderRadius = '5px';
 
-    createButton(container, '희영 ♨️', 'heeyoung-btn', heeyoungTemplate);
-    createButton(container, '민지 🐳', 'minji-btn', minjiTemplate);
-    createButton(container, '가란 🐧', 'garan-btn', garanTemplate);
-    createButton(container, '태곤 🍜', 'taegon-btn', taegonTemplate);
-    createButton(container, '성철 🗺️', 'sungcheol-btn', sungcheolTemplate);
+    createButton(container, '희영 ♨️', 'heeyoung-btn', templates.heeyoung);
+    createButton(container, '민지 🐳', 'minji-btn', templates.minji);
+    createButton(container, '가란 🐧', 'garan-btn', templates.garan);
+    createButton(container, '태곤 🍜', 'taegon-btn', templates.taegon);
+    createButton(container, '성철 🗺️', 'sungcheol-btn', templates.sungcheol);
     createButton(
       container,
       '은경 🎀',
       'eunkyoung-btn',
-      eunkyoungTemplate,
+      templates.eunkyoung,
       true
     );
 
