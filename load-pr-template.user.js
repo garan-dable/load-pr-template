@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Load PR Template
 // @namespace    http://tampermonkey.net/
-// @version      25060201
+// @version      25061201
 // @description  PR Template 내용을 가져옵니다.
 // @author       garan-dable
 // @match        https://github.com/teamdable/*/compare/*
 // @updateURL    https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/load-pr-template.user.js
 // @downloadURL  https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/load-pr-template.user.js
-// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/templates.js?v=25060201
-// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/main.js?v=25060201
+// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/templates.js?v=25061201
+// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/main.js?v=25061201
 // @grant        none
 // ==/UserScript==
 
@@ -378,7 +378,7 @@ const templates = {
 
     const container = document.createElement('div');
     container.id = toolbarId;
-    container.style.position = 'fixed';
+    container.style.position = 'absolute';
     container.style.top = '15px';
     container.style.left = '50%';
     container.style.transform = 'translateX(-50%)';
