@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Load PR Template
 // @namespace    http://tampermonkey.net/
-// @version      25061201
+// @version      25061202
 // @description  PR Template 내용을 가져옵니다.
 // @author       garan-dable
-// @match        https://github.com/teamdable/*/compare/*
+// @match        https://github.com/teamdable/*
 // @updateURL    https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/load-pr-template.user.js
 // @downloadURL  https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/load-pr-template.user.js
-// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/templates.js?v=25061201
-// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/main.js?v=25061201
+// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/templates.js?v=25061202
+// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/main.js?v=25061202
 // @grant        none
 // ==/UserScript==
 
@@ -303,9 +303,10 @@ const templates = {
   const toolbarId = 'load-pr-template';
   const urlPattern = /^\/teamdable\/[^\/]+\/compare\/.*/;
   let currentPath = location.pathname;
+  let toolbar = null;
 
-  const run = async () => {
-    if (!urlPattern.test(location.pathname)) return;
+  const createToolbar = () => {
+    if (toolbar) return;
 
     const resetButton = (button) => {
       button.style.color = 'var(--fgColor-default, var(--color-fg-default))';
@@ -383,7 +384,7 @@ const templates = {
     container.style.left = '50%';
     container.style.transform = 'translateX(-50%)';
     container.style.zIndex = 9999;
-    container.style.display = 'flex';
+    container.style.display = 'none';
     container.style.gap = '13px';
     container.style.padding = '0 15px';
     container.style.backgroundColor =
@@ -406,15 +407,29 @@ const templates = {
     );
 
     document.body.appendChild(container);
+    toolbar = container;
   };
 
-  run();
+  const updateToolbarVisibility = () => {
+    if (!toolbar) return;
+    if (urlPattern.test(location.pathname)) {
+      toolbar.style.display = 'flex';
+    } else {
+      toolbar.style.display = 'none';
+    }
+  };
 
-  const observer = new MutationObserver(async () => {
+  const init = () => {
+    createToolbar();
+    updateToolbarVisibility();
+  };
+
+  init();
+
+  const observer = new MutationObserver(() => {
     if (currentPath !== location.pathname) {
       currentPath = location.pathname;
-      document.getElementById(toolbarId)?.remove();
-      run();
+      updateToolbarVisibility();
     }
   });
 
