@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Load PR Template
 // @namespace    http://tampermonkey.net/
-// @version      25061202
+// @version      25061204
 // @description  PR Template 내용을 가져옵니다.
 // @author       garan-dable
 // @match        https://github.com/teamdable/*
 // @updateURL    https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/load-pr-template.user.js
 // @downloadURL  https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/load-pr-template.user.js
-// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/templates.js?v=25061202
-// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/main.js?v=25061202
+// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/templates.js?v=25061204
+// @require      https://gist.githubusercontent.com/garan-dable/ee248fcda8e1274e97684a161bd9fb4e/raw/main.js?v=25061204
 // @grant        none
 // ==/UserScript==
 
@@ -396,15 +396,9 @@ const templates = {
     createButton(container, '희영 ♨️', 'heeyoung-btn', templates.heeyoung);
     createButton(container, '민지 🐳', 'minji-btn', templates.minji);
     createButton(container, '가란 🐧', 'garan-btn', templates.garan);
-    createButton(container, '태곤 🍜', 'taegon-btn', templates.taegon);
+    createButton(container, '태곤 🍜', 'taegon-btn', templates.taegon, true);
     createButton(container, '성철 🗺️', 'sungcheol-btn', templates.sungcheol);
-    createButton(
-      container,
-      '은경 🎀',
-      'eunkyoung-btn',
-      templates.eunkyoung,
-      true
-    );
+    createButton(container, '은경 🎀', 'eunkyoung-btn', templates.eunkyoung);
 
     document.body.appendChild(container);
     toolbar = container;
