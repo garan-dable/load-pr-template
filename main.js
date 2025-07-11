@@ -94,8 +94,8 @@
 
     createButton(container, '희영 ♨️', 'heeyoung-btn', templates.heeyoung);
     createButton(container, '민지 🐳', 'minji-btn', templates.minji);
-    createButton(container, '가란 🐧', 'garan-btn', templates.garan);
-    createButton(container, '태곤 🍜', 'taegon-btn', templates.taegon, true);
+    createButton(container, '가란 🐧', 'garan-btn', templates.garan, true);
+    createButton(container, '태곤 🍜', 'taegon-btn', templates.taegon);
     createButton(container, '성철 🗺️', 'sungcheol-btn', templates.sungcheol);
     createButton(container, '은경 🎀', 'eunkyoung-btn', templates.eunkyoung);
 
