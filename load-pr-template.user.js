@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Load PR Template
 // @namespace    http://tampermonkey.net/
-// @version      25071106
+// @version      25071108
 // @description  PR Template 내용을 가져옵니다.
 // @author       garan-dable
 // @match        https://github.com/teamdable/*

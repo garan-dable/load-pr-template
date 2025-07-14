@@ -76,6 +76,14 @@
       container.appendChild(button);
     };
 
+    const createDivider = (container) => {
+      const divider = document.createElement('div');
+      divider.innerText = '|';
+      divider.style.fontSize = '15px';
+      divider.style.opacity = '0.3';
+      container.appendChild(divider);
+    };
+
     const container = document.createElement('div');
     container.id = toolbarId;
     container.style.position = 'absolute';
@@ -84,7 +92,7 @@
     container.style.transform = 'translateX(-50%)';
     container.style.zIndex = 9999;
     container.style.display = 'none';
-    container.style.gap = '13px';
+    container.style.gap = '11px';
     container.style.padding = '0 15px';
     container.style.backgroundColor =
       'var(--bgColor-default, var(--color-canvas-default))';
@@ -94,10 +102,11 @@
 
     createButton(container, '희영 ♨️', 'heeyoung-btn', templates.heeyoung);
     createButton(container, '민지 🐳', 'minji-btn', templates.minji);
-    createButton(container, '가란 🐧', 'garan-btn', templates.garan, true);
     createButton(container, '태곤 🍜', 'taegon-btn', templates.taegon);
     createButton(container, '성철 🗺️', 'sungcheol-btn', templates.sungcheol);
     createButton(container, '은경 🎀', 'eunkyoung-btn', templates.eunkyoung);
+    createDivider(container);
+    createButton(container, '가란 🐧', 'garan-btn', templates.garan, true);
 
     document.body.appendChild(container);
     toolbar = container;
